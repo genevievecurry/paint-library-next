@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -24,4 +24,36 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+} */
+
+.link {
+  @apply font-medium text-cyan-600 hover:text-black transition-colors cursor-pointer;
+}
+
+.decorate-link {
+  /* @apply font-normal; */
+  @apply font-medium text-cyan-600;
+  transition: all 0.4s ease;
+  background-color: rgba(0, 0, 0, 0);
+  background-position-x: center;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-image: linear-gradient(
+    transparent 62%,
+    theme("colors.yellow.100") 0
+  );
+  background-size: 75% 75%;
+  background-origin: padding-box;
+  background-clip: border-box;
+}
+
+.decorate-link:hover,
+.decorate-link:active {
+  @apply text-black;
+  background-size: 100% 100%;
+  background-image: linear-gradient(
+    transparent 62%,
+    theme("colors.pink.100") 0
+  );
 }

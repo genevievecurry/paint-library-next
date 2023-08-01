@@ -1,0 +1,378 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int                   @id @default(autoincrement())
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime?             @updatedAt
+  deleted        Boolean               @default(false)
+  email          String                @unique @db.Citext
+  hashedPassword String                @db.VarChar(100)
+  firstName      String                @db.VarChar(100)
+  lastName       String?               @db.VarChar(100)
+  username       String                @unique @db.Citext
+  uuid           String                @unique
+  role           Role                  @default(MEMBER)
+  status         UserStatus            @default(PENDING)
+  notes          Note[]
+  paints         Paint[]
+  ownedPalettes  Palette[]
+  savedPalettes  PaletteSavedByUsers[]
+  swatchCards    SwatchCard[]
+  userToken      UserToken[]
+}
+
+model UserToken {
+  id       Int    @id @default(autoincrement())
+  token    String
+  context  String
+  sentTo   String
+  userUuid String
+  user     User   @relation(fields: [userUuid], references: [uuid])
+}
+
+model Paint {
+  id                      Int                @id @default(autoincrement())
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime?          @updatedAt
+  deleted                 Boolean            @default(false)
+  published               Boolean            @default(false)
+  authorUuid              String
+  uuid                    String             @unique
+  slug                    String
+  manufacturerId          Int?
+  paintTypeId             Int
+  lineId                  Int?
+  productUrl              String?
+  name                    String             @db.VarChar(200)
+  communityDescription    String?            @db.VarChar(1000)
+  manufacturerDescription String?            @db.VarChar(1000)
+  hex                     String?            @db.VarChar(10)
+  lightfastRatingId       Int
+  transparencyRatingId    Int
+  stainingRatingId        Int
+  granulationRatingId     Int
+  notes                   Note[]
+  author                  User               @relation(fields: [authorUuid], references: [uuid])
+  granulationRating       GranulationRating  @relation(fields: [granulationRatingId], references: [id])
+  lightfastRating         LightfastRating    @relation(fields: [lightfastRatingId], references: [id])
+  line                    Line?              @relation(fields: [lineId], references: [id])
+  manufacturer            Manufacturer?      @relation(fields: [manufacturerId], references: [id])
+  paintType               PaintType          @relation(fields: [paintTypeId], references: [id])
+  stainingRating          StainingRating     @relation(fields: [stainingRatingId], references: [id])
+  transparencyRating      TransparencyRating @relation(fields: [transparencyRatingId], references: [id])
+  paintsInPalette         PaintsInPalette[]
+  pigmentsOnPaints        PigmentsOnPaints[]
+  swatchCard              SwatchCard[]       @relation("SwatchCards")
+  primarySwatchCard       SwatchCard?        @relation("PrimarySwatchCard")
+  tags                    TagsOnPaints[]
+
+  @@unique([manufacturerId, name])
+}
+
+model Pigment {
+  id                     Int                 @id @default(autoincrement())
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime?           @updatedAt
+  slug                   String              @unique
+  type                   PigmentType         @default(CIPIGMENT)
+  name                   String              @db.VarChar(200)
+  hex                    String?             @db.VarChar(10)
+  colorCode              String
+  imageKitUploadId       Int?
+  alternateNames         String?
+  ciConstitutionNumber   String?
+  composition            String?
+  description            String?
+  lightfastRatingCode    String?
+  notes                  String?
+  reviewed               Boolean             @default(false)
+  toxicity               String?
+  transparencyRatingCode String?
+  number                 Float?
+  color                  Color               @relation(fields: [colorCode], references: [code])
+  imageKitUpload         ImageKitUpload?     @relation(fields: [imageKitUploadId], references: [id])
+  lightfastRating        LightfastRating?    @relation(fields: [lightfastRatingCode], references: [code])
+  transparencyRating     TransparencyRating? @relation(fields: [transparencyRatingCode], references: [code])
+  paints                 PigmentsOnPaints[]
+}
+
+model PigmentsOnPaints {
+  id        Int      @id @default(autoincrement())
+  paintId   Int
+  pigmentId Int
+  setAt     DateTime @default(now())
+  paint     Paint    @relation(fields: [paintId], references: [id])
+  pigment   Pigment  @relation(fields: [pigmentId], references: [id])
+}
+
+model Tag {
+  id          Int                 @id @default(autoincrement())
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  label       String              @db.VarChar(60)
+  slug        String
+  paints      TagsOnPaints[]
+  swatchCards TagsOnSwatchCards[]
+
+  @@unique([label, slug])
+}
+
+model TagsOnPaints {
+  id      Int      @id @default(autoincrement())
+  paintId Int
+  tagId   Int
+  setAt   DateTime @default(now())
+  paint   Paint    @relation(fields: [paintId], references: [id])
+  tag     Tag      @relation(fields: [tagId], references: [id])
+}
+
+model TagsOnSwatchCards {
+  id           Int        @id @default(autoincrement())
+  swatchCardId Int
+  tagId        Int
+  setAt        DateTime   @default(now())
+  swatchCard   SwatchCard @relation(fields: [swatchCardId], references: [id])
+  tag          Tag        @relation(fields: [tagId], references: [id])
+}
+
+model SwatchCard {
+  id                          Int                           @id @default(autoincrement())
+  createdAt                   DateTime                      @default(now())
+  updatedAt                   DateTime?                     @updatedAt
+  deleted                     Boolean                       @default(false)
+  authorUuid                  String?
+  description                 String?
+  imageKitUploadId            Int?
+  paintId                     Int
+  paperLineId                 Int?
+  paperManufacturerId         Int?
+  paperTypeId                 Int?
+  paperWeightInLbs            Int?
+  isOriginal                  Boolean                       @default(false)
+  primaryOnPaintUuid          String?                       @unique
+  author                      User?                         @relation(fields: [authorUuid], references: [uuid])
+  imageKitUpload              ImageKitUpload?               @relation(fields: [imageKitUploadId], references: [id])
+  paint                       Paint                         @relation("SwatchCards", fields: [paintId], references: [id])
+  paperLine                   Line?                         @relation(fields: [paperLineId], references: [id])
+  paperManufacturer           Manufacturer?                 @relation(fields: [paperManufacturerId], references: [id])
+  paperType                   PaperType?                    @relation(fields: [paperTypeId], references: [id])
+  primaryOnPaint              Paint?                        @relation("PrimarySwatchCard", fields: [primaryOnPaintUuid], references: [uuid])
+  swatchCardTypesOnSwatchCard SwatchCardTypesOnSwatchCard[]
+  tags                        TagsOnSwatchCards[]
+}
+
+model SwatchCardType {
+  id                          Int                           @id @default(autoincrement())
+  createdAt                   DateTime                      @default(now())
+  updatedAt                   DateTime?                     @updatedAt
+  name                        SwatchCardTypeName            @unique
+  label                       String                        @db.VarChar(60)
+  description                 String                        @db.VarChar(240)
+  swatchCardTypesOnSwatchCard SwatchCardTypesOnSwatchCard[]
+}
+
+model SwatchCardTypesOnSwatchCard {
+  id                 Int                 @id @default(autoincrement())
+  swatchCardId       Int
+  swatchCardTypeName SwatchCardTypeName?
+  swatchCard         SwatchCard          @relation(fields: [swatchCardId], references: [id])
+  swatchCardType     SwatchCardType?     @relation(fields: [swatchCardTypeName], references: [name])
+}
+
+model PaperType {
+  id         Int          @id @default(autoincrement())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime?    @updatedAt
+  name       String
+  swatchCard SwatchCard[]
+}
+
+model Note {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+  authorUuid String
+  paintId    Int
+  approved   Boolean   @default(false)
+  content    String    @db.VarChar(500)
+  noteId     Int?
+  author     User      @relation(fields: [authorUuid], references: [uuid])
+  note       Note?     @relation("NoteToNote", fields: [noteId], references: [id])
+  childNotes Note[]    @relation("NoteToNote")
+  paint      Paint     @relation(fields: [paintId], references: [id])
+}
+
+model Manufacturer {
+  id         Int          @id @default(autoincrement())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime?    @updatedAt
+  name       String       @unique
+  website    String?
+  sellPaint  Boolean      @default(false)
+  sellPaper  Boolean      @default(false)
+  slug       String       @default("unknown")
+  lines      Line[]
+  paints     Paint[]
+  swatchCard SwatchCard[]
+}
+
+model Line {
+  id               Int          @id @default(autoincrement())
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime?    @updatedAt
+  manufacturerName String
+  name             String
+  manufacturer     Manufacturer @relation(fields: [manufacturerName], references: [name])
+  paints           Paint[]
+  swatchCard       SwatchCard[]
+
+  @@unique([manufacturerName, name])
+}
+
+model PaintType {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  label     String    @unique
+  slug      String    @unique
+  paints    Paint[]
+}
+
+model Color {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  label     String    @unique
+  slug      String    @unique
+  code      String    @unique
+  hex       String    @default("#ffffff")
+  pigments  Pigment[]
+}
+
+model LightfastRating {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  label       String
+  description String?
+  code        String    @unique
+  paint       Paint[]
+  pigment     Pigment[]
+}
+
+model TransparencyRating {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  label       String
+  description String?
+  code        String    @unique
+  paint       Paint[]
+  pigment     Pigment[]
+}
+
+model StainingRating {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  label       String
+  description String?
+  code        String   @unique
+  paint       Paint[]
+}
+
+model GranulationRating {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  label       String
+  description String?
+  code        String   @unique
+  paint       Paint[]
+}
+
+model ImageKitUpload {
+  id           Int          @id @default(autoincrement())
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime?    @updatedAt
+  fileId       String
+  filePath     String
+  name         String
+  thumbnailUrl String
+  url          String
+  height       Int?
+  width        Int?
+  pigment      Pigment[]
+  swatchCard   SwatchCard[]
+}
+
+model Palette {
+  id              Int                   @id @default(autoincrement())
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime?             @updatedAt
+  deleted         Boolean               @default(false)
+  visible         Boolean               @default(true)
+  uuid            String                @unique
+  slug            String
+  title           String                @db.VarChar(60)
+  description     String?               @db.VarChar(240)
+  ownerUuid       String
+  paintsInPalette PaintsInPalette[]
+  owner           User                  @relation(fields: [ownerUuid], references: [uuid])
+  savedByUsers    PaletteSavedByUsers[]
+}
+
+model PaintsInPalette {
+  id          Int      @id @default(autoincrement())
+  setAt       DateTime @default(now())
+  order       Int?     @default(autoincrement())
+  paletteUuid String
+  paintUuid   String
+  paint       Paint    @relation(fields: [paintUuid], references: [uuid])
+  palette     Palette  @relation(fields: [paletteUuid], references: [uuid])
+}
+
+model PaletteSavedByUsers {
+  id          Int      @id @default(autoincrement())
+  setAt       DateTime @default(now())
+  paletteUuid String
+  userUuid    String
+  palette     Palette  @relation(fields: [paletteUuid], references: [uuid])
+  user        User     @relation(fields: [userUuid], references: [uuid])
+}
+
+enum Role {
+  MEMBER
+  ADMIN
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  BANNED
+}
+
+enum PigmentType {
+  ETC
+  CINATURAL
+  CIPIGMENT
+}
+
+enum SwatchCardTypeName {
+  GRADIENT
+  GRANULATION
+  DISPERSEMENT
+  HIGH_DILUTION
+  MID_DILUTION
+  MASSTONE
+  GLAZE
+  WET_LIFT
+  DRY_LIFT
+}
