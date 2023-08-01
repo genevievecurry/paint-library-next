@@ -5,16 +5,22 @@ import type {
   TransparencyRating,
 } from "@prisma/client";
 
+export type Rating =
+  | LightfastRating
+  | TransparencyRating
+  | GranulationRating
+  | StainingRating;
+
 export default function PaintRatings({
   lightfastRating,
   transparencyRating,
   granulationRating,
   stainingRating,
 }: {
-  lightfastRating: LightfastRating;
-  transparencyRating: TransparencyRating;
-  granulationRating: GranulationRating;
-  stainingRating: StainingRating;
+  lightfastRating: Rating;
+  transparencyRating: Rating;
+  granulationRating: Rating;
+  stainingRating: Rating;
 }) {
   const RatingCode = ({ code }: { code: string }) => {
     if (code !== "X") {

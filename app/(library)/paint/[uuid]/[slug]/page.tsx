@@ -1,13 +1,8 @@
 import prisma from "@/lib/prisma";
-import type {
-  GranulationRating,
-  LightfastRating,
-  Prisma,
-  StainingRating,
-  TransparencyRating,
-} from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { Metadata } from "next";
 import PaintRatings from "@/components/PaintRatings";
+import type { Rating } from "@/components/PaintRatings";
 
 export async function generateMetadata({
   params,
@@ -83,10 +78,10 @@ type PaintPageProps = {
   };
   manufacturerDescription: string;
   communityDescription: string;
-  lightfastRating: LightfastRating;
-  transparencyRating: TransparencyRating;
-  granulationRating: GranulationRating;
-  stainingRating: StainingRating;
+  lightfastRating: Rating;
+  transparencyRating: Rating;
+  granulationRating: Rating;
+  stainingRating: Rating;
 };
 
 export default async function Page({ params }: { params: { uuid: string } }) {
