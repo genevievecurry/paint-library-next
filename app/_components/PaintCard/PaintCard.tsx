@@ -1,13 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { ImageKitUpload } from "@prisma/client";
+import type { ImageKitUpload, Paint } from "@prisma/client";
 
-export type PaintCardProps = {
-  published: boolean;
-  uuid: string;
-  slug: string;
-  hex: string;
-  name: string;
+export type PaintCard = Omit<Paint, "swatchCard"> & {
   swatchCard: {
     imageKitUpload: ImageKitUpload;
     primaryOnPaintUuid: string;
@@ -20,7 +15,7 @@ export type PaintCardProps = {
   };
 };
 
-export function PaintCard({ paint }: { paint: PaintCardProps }) {
+export function PaintCard({ paint }: { paint: PaintCard }) {
   const { uuid, slug, hex, name, swatchCard, manufacturer, line } = paint;
   const swatchHeight = 200;
   const swatchWidth = 200;

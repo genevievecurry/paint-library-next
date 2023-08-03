@@ -1,8 +1,8 @@
 import prisma from "@/lib/prisma";
-import { PaintCard, PaintCardProps } from "@/components/PaintCard";
+import { PaintCard } from "@/components/PaintCard";
 import type { Prisma } from "@prisma/client";
 
-const paintCollectionSelect: Prisma.PaintSelect = {
+const paintCardCollectionSelect: Prisma.PaintSelect = {
   published: true,
   uuid: true,
   slug: true,
@@ -29,15 +29,24 @@ const paintCollectionSelect: Prisma.PaintSelect = {
   },
 };
 
-async function getPaintCollection({
+type PaintCardCollection = PaintCard[];
+type UnPromisifiedObject<T> = { [k in keyof T]: UnPromisify<T[k]> };
+type UnPromisify<T> = T extends Promise<infer U> ? U : T;
+
+async function getPaintCardCollection<
+  T extends { [key: string]: Promise<any> }
+>({
   count = 50,
+  set = 0,
+  showAll = true,
+  showOnlySwatched = true,
 }: {
-  count: number;
-}): Promise<{}[]> {
-  const set = 0;
+  count?: number;
+  set?: number;
+  showAll?: boolean;
+  showOnlySwatched?: boolean;
+}): Promise<UnPromisifiedObject<T>> {
   const take = count + set;
-  const showAll = true;
-  const showOnlySwatched = true;
 
   const results = await prisma.paint.findMany({
     skip: set,
@@ -57,20 +66,20 @@ async function getPaintCollection({
     orderBy: {
       updatedAt: "desc",
     },
-    select: paintCollectionSelect,
+    select: paintCardCollectionSelect,
   });
 
-  return results;
+  return results as UnPromisifiedObject<T>;
 }
 
-export async function PaintCollection({ count }: { count: number }) {
-  const paintCollectionData = (await getPaintCollection({
+export async function PaintCardCollection({ count }: { count: number }) {
+  const paintCardCollectionData = (await getPaintCardCollection({
     count,
-  })) as PaintCardProps[];
+  })) as PaintCard[];
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-3">
-      {paintCollectionData.map((paint) => (
+      {paintCardCollectionData.map((paint) => (
         <PaintCard key={paint.uuid} paint={paint} />
       ))}
     </div>

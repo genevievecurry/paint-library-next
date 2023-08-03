@@ -1,7 +1,9 @@
 import prisma from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { Metadata } from "next";
-import PaintRatings from "@/components/PaintRatings";
+import Link from "next/link";
+import { PaintRatings, PageHeader } from "@/components/index";
+
 import type { Rating } from "@/components/PaintRatings";
 
 export async function generateMetadata({
@@ -44,6 +46,7 @@ const paintPageSelect: Prisma.PaintSelect = {
   uuid: true,
   slug: true,
   name: true,
+  line: true,
   manufacturer: {
     select: {
       slug: true,
@@ -73,8 +76,11 @@ async function getPaint({ uuid }: { uuid: string }) {
 type PaintPageProps = {
   uuid: string;
   name: string;
+  line: { name: string };
   manufacturer: {
     name: string;
+    slug: string;
+    website: string;
   };
   manufacturerDescription: string;
   communityDescription: string;
@@ -90,6 +96,7 @@ export default async function Page({ params }: { params: { uuid: string } }) {
 
   const {
     name,
+    line,
     manufacturer,
     manufacturerDescription,
     communityDescription,
@@ -99,10 +106,37 @@ export default async function Page({ params }: { params: { uuid: string } }) {
     stainingRating,
   } = paintData as PaintPageProps;
 
+  const HeaderSubtitle = () => {
+    if (line) {
+      return (
+        <>
+          {line.name} by{" "}
+          <Link
+            href={`/manufacturer/${manufacturer.slug}`}
+            className="decorate-link"
+          >
+            {manufacturer.name}
+          </Link>
+        </>
+      );
+    } else {
+      return (
+        <Link
+          href={`/manufacturer/${manufacturer.slug}`}
+          className="decorate-link"
+        >
+          {manufacturer.name}
+        </Link>
+      );
+    }
+  };
+
   return (
     <>
       <div className="lg:container mx-auto px-4 sm:px-6">
-        <div>[HEADER]</div>
+        <PageHeader title={name} subtitle={<HeaderSubtitle />}>
+          [ADD USER ACTIONS]
+        </PageHeader>
         <div>[SWATCH CARD COLLECTION COMPONENT]</div>
         <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-10">
           <div className="col-span-2">

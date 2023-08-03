@@ -1,4 +1,4 @@
-import { PaintCollection } from "@/components/PaintCollection";
+import { PaintCardCollection } from "@/components/PaintCardCollection";
 
 export default function Home() {
   return (
@@ -16,7 +16,7 @@ export default function Home() {
       <div className="lg:container mx-auto px-4 sm:px-6">
         <h2 className="font-bold text-3xl mb-6">Recently Swatched Paints</h2>
 
-        <PaintCollection count={30} />
+        <PaintCardCollection count={30} />
       </div>
     </>
   );

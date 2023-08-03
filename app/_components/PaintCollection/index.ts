@@ -1,1 +1,0 @@
-export { PaintCollection } from "./PaintCollection";

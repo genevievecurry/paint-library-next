@@ -1,0 +1,1 @@
+export { PaintCardCollection } from "./PaintCardCollection";
