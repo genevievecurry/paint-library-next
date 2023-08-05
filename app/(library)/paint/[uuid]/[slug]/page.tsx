@@ -2,7 +2,12 @@ import prisma from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { Metadata } from "next";
 import Link from "next/link";
-import { PaintRatings, PageHeader } from "@/components/index";
+import {
+  PaintRatings,
+  PageHeader,
+  SwatchCardCollection,
+  NoteCollection,
+} from "@/components/server";
 
 import type { Rating } from "@/components/PaintRatings";
 
@@ -43,6 +48,7 @@ export async function generateMetadata({
 }
 
 const paintPageSelect: Prisma.PaintSelect = {
+  id: true,
   uuid: true,
   slug: true,
   name: true,
@@ -74,6 +80,7 @@ async function getPaint({ uuid }: { uuid: string }) {
 }
 
 type PaintPageProps = {
+  id: number;
   uuid: string;
   name: string;
   line: { name: string };
@@ -95,6 +102,7 @@ export default async function Page({ params }: { params: { uuid: string } }) {
   const paintData = await getPaint({ uuid });
 
   const {
+    id,
     name,
     line,
     manufacturer,
@@ -135,9 +143,12 @@ export default async function Page({ params }: { params: { uuid: string } }) {
     <>
       <div className="lg:container mx-auto px-4 sm:px-6">
         <PageHeader title={name} subtitle={<HeaderSubtitle />}>
-          [ADD USER ACTIONS]
+          {/* TODO: Add User/Admin Buttons */}
+          {/* https://github.com/genevievecurry/paint-library-app/blob/c0e46bbc54d6528b42e1193d7b8a853420639c18/src/routes/paint/%5Buuid%5D/%5Bslug%5D.svelte#L387-L547 */}
         </PageHeader>
-        <div>[SWATCH CARD COLLECTION COMPONENT]</div>
+        <div>
+          <SwatchCardCollection paintId={id} />
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-10">
           <div className="col-span-2">
             <section className="mt-8">
@@ -186,7 +197,10 @@ export default async function Page({ params }: { params: { uuid: string } }) {
             </div>
           )}
         </div>
-        <div>[NOTES]</div>
+        <section className="mt-8">
+          <h2 className="font-bold text-2xl mb-4">Artist Notes</h2>
+          <NoteCollection paintId={id} />
+        </section>
       </div>
     </>
   );

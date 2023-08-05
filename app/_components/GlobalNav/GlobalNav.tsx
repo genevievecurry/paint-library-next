@@ -1,5 +1,6 @@
 "use client";
 
+import { Bars4Icon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 
 export function GlobalNav() {
@@ -8,6 +9,7 @@ export function GlobalNav() {
   return (
     <div className="relative inline-block text-left pl-3">
       {/* TODO: Add click outside event handler to set menuOpen to false */}
+      {/* https://github.com/genevievecurry/paint-library-app/blob/c0e46bbc54d6528b42e1193d7b8a853420639c18/src/routes/__layout.svelte#L90-L94 */}
       <div>
         <button
           type="button"
@@ -19,8 +21,7 @@ export function GlobalNav() {
           ? 'text-pink-400 active'
           : 'text-black'}"
         >
-          {/* TODO: Add menu icon */}
-          [MENU]
+          <Bars4Icon className="h-6 w-6" />
         </button>
       </div>
       {menuOpen && (
@@ -35,18 +36,7 @@ export function GlobalNav() {
         >
           <div className="py-1" role="none">
             {/* TODO: Add authorized user & admin menu items */}
-            {/* {#if $session?.user}
-            <div
-              className="block px-4 pt-2 pb-4 border-b border-gray-300">
-              <a
-                href={`/@${$session.user.username}`}
-                className="decorate-link text-sm"
-                role="menuitem"
-                tabindex="-1"
-                on:click={() => (menuOpen = false)}
-                >@{$session.user.username}</a>
-            </div>
-          {/if} */}
+            {/* https://github.com/genevievecurry/paint-library-app/blob/c0e46bbc54d6528b42e1193d7b8a853420639c18/src/routes/__layout.svelte#L116-L127 */}
             <div className="block px-4 pt-2 pb-2 border-b border-gray-300">
               <span className="text-xs text-gray-500">Browse by:</span>
               <div className="block px-4 py-1 text-sm">
@@ -73,60 +63,12 @@ export function GlobalNav() {
               </div>
             </div>
             {/* TODO: Add authorized user & admin menu items */}
-            {/* {#if $session?.user}
-            {#if $session.user?.role === 'ADMIN'}
-              <div className="block px-4 py-2 text-sm"
-                ><a
-                  href="/admin"
-                  className="decorate-link"
-                  role="menuitem"
-                  tabindex="-1"
-                  on:click={() => (menuOpen = false)}
-                  >Paint Library Admin</a
-                ></div>
-              <div className="block px-4 py-2 text-sm"
-                ><a
-                  href="/admin/paints/create"
-                  className="decorate-link"
-                  role="menuitem"
-                  tabindex="-1"
-                  on:click={() => (menuOpen = false)}>Create Paint</a
-                ></div>
-              <div className="block px-4 py-2 text-sm">
-                <a
-                  href="/register"
-                  className="decorate-link"
-                  role="menuitem"
-                  tabindex="-1"
-                  on:click={() => (menuOpen = false)}
-                  >Register User</a>
-              </div>
-            {/if}
-
-            <div className="block px-4 py-2 text-sm">
-              <a
-                href="/account"
-                className="decorate-link"
-                role="menuitem"
-                tabindex="-1"
-                on:click={() => (menuOpen = false)}>Account</a>
-            </div>
-
-            <div
-              className="block px-4 pb-2 pt-2 text-sm border-t border-gray-300">
-              <span
-                className="decorate-link cursor-pointer"
-                role="menuitem"
-                tabindex="-1"
-                on:click={logoutHandler}>Sign Out</span>
-            </div>
-          {:else} */}
+            {/* https://github.com/genevievecurry/paint-library-app/blob/c0e46bbc54d6528b42e1193d7b8a853420639c18/src/routes/__layout.svelte#L147-L199 */}
             <div className="block px-4 pb-2 pt-2 text-sm border-t border-gray-300">
               <a href="/login" className="decorate-link">
                 Login
               </a>
             </div>
-            {/* {/if} */}
           </div>
         </div>
       )}

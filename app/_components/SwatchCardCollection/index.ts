@@ -1,0 +1,1 @@
+export { SwatchCardCollection } from "./SwatchCardCollection";

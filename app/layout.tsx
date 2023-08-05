@@ -2,6 +2,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import Script from "next/script";
 import { GlobalNav } from "@/components/GlobalNav";
+import Link from "next/link";
+import { SwatchIcon } from "@heroicons/react/24/outline";
 
 export const metadata: Metadata = {
   title: {
@@ -34,16 +36,18 @@ export default function RootLayout({
                 >
                   <div className="flex items-center">
                     <div className="flex items-center justify-between w-full md:w-auto">
-                      <a href="/">PAINT LIBRARY</a>
+                      <Link href="/">
+                        <SwatchIcon className="h-16 w-16" />
+                      </Link>
                     </div>
                   </div>
                   <div className="hidden flex-1 md:flex md:items-center md:space-x-6 px-6">
                     [SEARCH]
                   </div>
                   <div className="md:flex md:items-center md:space-x-6 px-3 text-sm">
-                    <a href="/palettes" className="decorate-link">
+                    <Link href="/palettes" className="decorate-link">
                       Palettes
-                    </a>
+                    </Link>
                   </div>
 
                   <GlobalNav />
@@ -64,14 +68,14 @@ export default function RootLayout({
                   >
                     <p>
                       Content available under
-                      <a
+                      <Link
                         href="http://creativecommons.org/licenses/by-sa/4.0/?ref=chooser-v1"
                         target="_blank"
                         rel="license noopener noreferrer"
                         className="decorate-link inline-block"
                       >
                         CC BY-SA 4.0
-                      </a>
+                      </Link>
                     </p>
                     <div className="inline-flex">
                       <svg

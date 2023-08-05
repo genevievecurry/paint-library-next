@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
-import { PaintCard } from "@/components/PaintCard";
+import { PaintCardItem } from "@/components/server";
+import type { PaintCardItemProps } from "@/components/server";
 import type { Prisma } from "@prisma/client";
 
 const paintCardCollectionSelect: Prisma.PaintSelect = {
@@ -29,10 +30,6 @@ const paintCardCollectionSelect: Prisma.PaintSelect = {
   },
 };
 
-type PaintCardCollection = PaintCard[];
-type UnPromisifiedObject<T> = { [k in keyof T]: UnPromisify<T[k]> };
-type UnPromisify<T> = T extends Promise<infer U> ? U : T;
-
 async function getPaintCardCollection<
   T extends { [key: string]: Promise<any> }
 >({
@@ -48,7 +45,7 @@ async function getPaintCardCollection<
 }): Promise<UnPromisifiedObject<T>> {
   const take = count + set;
 
-  const results = await prisma.paint.findMany({
+  const paintCardCollection = await prisma.paint.findMany({
     skip: set,
     take: take + set,
     where: {
@@ -69,18 +66,18 @@ async function getPaintCardCollection<
     select: paintCardCollectionSelect,
   });
 
-  return results as UnPromisifiedObject<T>;
+  return paintCardCollection as UnPromisifiedObject<T>;
 }
 
 export async function PaintCardCollection({ count }: { count: number }) {
   const paintCardCollectionData = (await getPaintCardCollection({
     count,
-  })) as PaintCard[];
+  })) as PaintCardItemProps[];
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-3">
       {paintCardCollectionData.map((paint) => (
-        <PaintCard key={paint.uuid} paint={paint} />
+        <PaintCardItem key={paint.uuid} paint={paint} />
       ))}
     </div>
   );
