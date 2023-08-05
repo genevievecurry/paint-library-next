@@ -27,7 +27,7 @@ export function NoteItem({ note }: { note: NoteItemProps }) {
               className="text-gray-500 font-light"
               title={formattedDate(createdAt)}
             >
-              posted {timeAgo(createdAt)}.
+              posted {timeAgo({ agoDate: createdAt })}.
             </span>
             {!approved && (
               <span>(Not public - pending moderator approval!)</span>

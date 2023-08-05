@@ -224,11 +224,11 @@ export function SwatchCardItem({
                   {author.username}
                 </Link>
                 {author.role === "ADMIN" && <>&nbsp;[ADMIN ICON]&nbsp;</>}
-                {timeAgo(updatedAt)}.
+                {timeAgo({ agoDate: updatedAt })}.
               </p>
             ) : (
               <p className="text-xs mt-2 leading-tight">
-                Uploaded {timeAgo(updatedAt)}.
+                Uploaded {timeAgo({ agoDate: updatedAt })}.
               </p>
             )}
           </div>

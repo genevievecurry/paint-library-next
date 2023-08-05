@@ -1,10 +1,14 @@
-export const timeAgo = (date: Date | null): string => {
-  if (!date) return "";
+export const timeAgo = ({
+  agoDate,
+  nowDate = new Date(),
+}: {
+  agoDate: Date | null | undefined;
+  nowDate?: Date;
+}): string => {
+  if (!agoDate) return "";
   const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
-  const now = new Date();
-  const updated = new Date(date);
 
-  const secondsBetween = Math.abs(Number(updated) - Number(now)) / 1000;
+  const secondsBetween = Math.abs(Number(agoDate) - Number(nowDate)) / 1000;
   const minutesBetween = Math.floor(secondsBetween / 60);
   const hoursBetween = Math.floor(secondsBetween / (60 * 60));
   const daysBetween = Math.floor(secondsBetween / (60 * 60 * 24));
@@ -22,7 +26,7 @@ export const timeAgo = (date: Date | null): string => {
 };
 
 export const formattedDate = (
-  createdAt: string | number | Date | null
+  createdAt: string | number | Date | null | undefined
 ): string => {
   if (!createdAt) return "";
   return new Date(createdAt).toLocaleDateString("en-US", {
