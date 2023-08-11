@@ -1,3 +1,6 @@
+"use client";
+
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 export function PageHeader({
@@ -5,19 +8,30 @@ export function PageHeader({
   subtitle,
   description,
   owner,
-  pathname = "",
   children,
+  simpleBreadcrumbs = false,
 }: {
   title: string;
-  subtitle?: React.JSX.Element | string;
+  subtitle?: React.ReactNode;
   description?: string;
   owner?: { username: string };
-  pathname?: string;
   children?: React.ReactNode;
+  simpleBreadcrumbs?: boolean;
 }) {
-  const pathElements = pathname.slice(1).split("/");
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("q");
 
-  const breadCrumbItems = pathElements.map((el, index) => {
+  let pathElements = pathname.split("/").filter((el) => el);
+
+  if (simpleBreadcrumbs)
+    pathElements = [pathElements.findLast((el) => el) as string];
+
+  if (searchQuery) {
+    pathElements = [...pathElements, `?q=${searchQuery}`];
+  }
+
+  const crumbs = pathElements.map((el, index) => {
     let url = "";
 
     for (let i = 0; i < index; i++) {
@@ -39,7 +53,7 @@ export function PageHeader({
     breadcrumb: { url: string; title: string };
     index: number;
   }) => {
-    if (index < breadCrumbItems.length - 1) {
+    if (index < crumbs.length - 1) {
       return (
         <>
           <Link
@@ -65,7 +79,7 @@ export function PageHeader({
               Paint Library
             </Link>
             <span className="text-gray-400">/</span>
-            {breadCrumbItems.map((breadcrumb, index) => (
+            {crumbs.map((breadcrumb, index) => (
               <BreadCrumb breadcrumb={breadcrumb} index={index} key={index} />
             ))}
           </div>

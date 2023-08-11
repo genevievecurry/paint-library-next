@@ -64,11 +64,11 @@ export function GlobalNav() {
             </div>
             {/* TODO: Add authorized user & admin menu items */}
             {/* https://github.com/genevievecurry/paint-library-app/blob/c0e46bbc54d6528b42e1193d7b8a853420639c18/src/routes/__layout.svelte#L147-L199 */}
-            <div className="block px-4 pb-2 pt-2 text-sm border-t border-gray-300">
+            {/* <div className="block px-4 pb-2 pt-2 text-sm border-t border-gray-300">
               <a href="/login" className="decorate-link">
                 Login
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

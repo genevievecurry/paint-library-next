@@ -4,6 +4,8 @@ import Script from "next/script";
 import { GlobalNav } from "@/components/GlobalNav";
 import Link from "next/link";
 import { SwatchIcon } from "@heroicons/react/24/outline";
+import { ExternalLink } from "./_components/client";
+import { SearchBar } from "./_components/SearchBar/SearchBar";
 
 export const metadata: Metadata = {
   title: {
@@ -18,6 +20,16 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const creativeCommonsNamespaces = {
+    "xmlns:cc": "http://creativecommons.org/ns#",
+    "xmlns:dct": "http://purl.org/dc/terms/",
+  };
+
+  const SVGNamespaces = {
+    // "xmlns:xlink": "http://www.w3.org/1999/xlink",
+    // "xml:space": "preserve",
+  };
+
   return (
     <html lang="en">
       <Script
@@ -42,13 +54,13 @@ export default function RootLayout({
                     </div>
                   </div>
                   <div className="hidden flex-1 md:flex md:items-center md:space-x-6 px-6">
-                    [SEARCH]
+                    <SearchBar />
                   </div>
-                  <div className="md:flex md:items-center md:space-x-6 px-3 text-sm">
+                  {/* <div className="md:flex md:items-center md:space-x-6 px-3 text-sm">
                     <Link href="/palettes" className="decorate-link">
                       Palettes
                     </Link>
-                  </div>
+                  </div> */}
 
                   <GlobalNav />
                 </nav>
@@ -63,32 +75,25 @@ export default function RootLayout({
                 <div className="mt-12 border-t border-gray-200 py-8">
                   <div
                     className="flex w-full text-base text-gray-500 text-center font-light mx-auto justify-center"
-                    // xmlns:cc="http://creativecommons.org/ns#"
-                    // xmlns:dct="http://purl.org/dc/terms/"
+                    {...creativeCommonsNamespaces}
                   >
                     <p>
-                      Content available under
-                      <Link
-                        href="http://creativecommons.org/licenses/by-sa/4.0/?ref=chooser-v1"
-                        target="_blank"
-                        rel="license noopener noreferrer"
-                        className="decorate-link inline-block"
-                      >
+                      Content available under{" "}
+                      <ExternalLink url="http://creativecommons.org/licenses/by-sa/4.0/?ref=chooser-v1">
                         CC BY-SA 4.0
-                      </Link>
+                      </ExternalLink>
                     </p>
                     <div className="inline-flex">
                       <svg
                         version="1.0"
                         id="Layer_1"
                         xmlns="http://www.w3.org/2000/svg"
-                        // xmlns:xlink="http://www.w3.org/1999/xlink"
                         x="0px"
                         y="0px"
                         className="h-6 w-6 ml-2"
                         viewBox="5.5 -3.5 64 64"
                         enableBackground="new 5.5 -3.5 64 64"
-                        // xml:space="preserve"
+                        {...SVGNamespaces}
                       >
                         <g>
                           <circle
@@ -105,13 +110,12 @@ export default function RootLayout({
                         version="1.0"
                         id="Layer_1"
                         xmlns="http://www.w3.org/2000/svg"
-                        // xmlns:xlink="http://www.w3.org/1999/xlink"
                         x="0px"
                         y="0px"
                         className="h-6 w-6 ml-2"
                         viewBox="5.5 -3.5 64 64"
                         enableBackground="new 5.5 -3.5 64 64"
-                        // xml:space="preserve"
+                        {...SVGNamespaces}
                       >
                         <g>
                           <circle
@@ -130,13 +134,12 @@ export default function RootLayout({
                         version="1.0"
                         id="Layer_1"
                         xmlns="http://www.w3.org/2000/svg"
-                        // xmlns:xlink="http://www.w3.org/1999/xlink"
                         x="0px"
                         y="0px"
                         className="h-6 w-6 ml-2"
                         viewBox="5.5 -3.5 64 64"
                         enableBackground="new 5.5 -3.5 64 64"
-                        // xml:space="preserve"
+                        {...SVGNamespaces}
                       >
                         <g>
                           <circle

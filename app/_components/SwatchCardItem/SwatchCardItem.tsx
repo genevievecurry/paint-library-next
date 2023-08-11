@@ -183,7 +183,7 @@ export function SwatchCardItem({
                       <>
                         by
                         <Link
-                          href="/manufacturer/{paperManufacturer.slug}"
+                          href="/manufacturers/{paperManufacturer.slug}"
                           className="decorate-link"
                         >
                           {paperManufacturer?.name}

@@ -1,0 +1,1 @@
+export { PigmentCardCollection } from "./PigmentCardCollection";

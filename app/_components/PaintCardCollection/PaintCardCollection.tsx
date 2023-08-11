@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
-import { PaintCardItem } from "@/components/server";
-import type { PaintCardItemProps } from "@/components/server";
+import { PaintCardItem } from "@/components/client";
+import type { PaintCardItemProps } from "@/components/client";
 import type { Prisma } from "@prisma/client";
 
 const paintCardCollectionSelect: Prisma.PaintSelect = {
@@ -9,6 +9,25 @@ const paintCardCollectionSelect: Prisma.PaintSelect = {
   slug: true,
   hex: true,
   name: true,
+  pigmentsOnPaints: {
+    select: {
+      pigment: {
+        select: {
+          slug: true,
+          type: true,
+          number: true,
+          name: true,
+          color: {
+            select: {
+              code: true,
+              slug: true,
+            },
+          },
+        },
+      },
+    },
+  },
+  _count: true,
   line: {
     select: {
       name: true,
@@ -33,22 +52,35 @@ const paintCardCollectionSelect: Prisma.PaintSelect = {
 async function getPaintCardCollection<
   T extends { [key: string]: Promise<any> }
 >({
-  count = 50,
+  count = undefined,
   set = 0,
   showAll = true,
-  showOnlySwatched = true,
+  showOnlySwatched = false,
+  pigmentId = undefined,
+  orderBy = undefined,
 }: {
-  count?: number;
+  count?: number | undefined;
   set?: number;
   showAll?: boolean;
   showOnlySwatched?: boolean;
+  pigmentId?: number;
+  orderBy?: { [key: string]: "asc" | "desc" };
 }): Promise<UnPromisifiedObject<T>> {
-  const take = count + set;
+  const take = count ? count + set : undefined;
 
   const paintCardCollection = await prisma.paint.findMany({
     skip: set,
-    take: take + set,
+    take: take,
     where: {
+      pigmentsOnPaints: {
+        some: {
+          pigment: {
+            is: {
+              id: pigmentId,
+            },
+          },
+        },
+      },
       published: showAll,
       swatchCard: showOnlySwatched
         ? {
@@ -60,25 +92,59 @@ async function getPaintCardCollection<
           }
         : undefined,
     },
-    orderBy: {
-      updatedAt: "desc",
-    },
+    orderBy: orderBy,
     select: paintCardCollectionSelect,
   });
 
   return paintCardCollection as UnPromisifiedObject<T>;
 }
 
-export async function PaintCardCollection({ count }: { count: number }) {
-  const paintCardCollectionData = (await getPaintCardCollection({
+export async function PaintCardCollection({
+  count,
+  showOnlySwatched = false,
+  pigmentId,
+  pigmentComposition = "any",
+  orderBy,
+  emptyMessage,
+  children,
+}: {
+  count?: number;
+  showOnlySwatched?: boolean;
+  pigmentId?: number;
+  pigmentComposition?: "any" | "single" | "multi";
+  orderBy?: { [key: string]: "asc" | "desc" };
+  emptyMessage?: React.ReactNode;
+  children?: React.ReactNode;
+}) {
+  let paintCardCollectionData = (await getPaintCardCollection({
     count,
+    showOnlySwatched,
+    pigmentId,
+    orderBy,
   })) as PaintCardItemProps[];
 
+  if (pigmentComposition === "single") {
+    paintCardCollectionData = paintCardCollectionData.filter(
+      (paint) => paint._count.pigmentsOnPaints === 1
+    );
+  } else if (pigmentComposition === "multi") {
+    paintCardCollectionData = paintCardCollectionData.filter(
+      (paint) => paint._count.pigmentsOnPaints > 1
+    );
+  }
+
+  if (paintCardCollectionData.length === 0) {
+    return <>{emptyMessage}</>;
+  }
+
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-3">
-      {paintCardCollectionData.map((paint) => (
-        <PaintCardItem key={paint.uuid} paint={paint} />
-      ))}
-    </div>
+    <>
+      {children}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-3">
+        {paintCardCollectionData.map((paint) => (
+          <PaintCardItem key={paint.uuid} paint={paint} />
+        ))}
+      </div>
+    </>
   );
 }
