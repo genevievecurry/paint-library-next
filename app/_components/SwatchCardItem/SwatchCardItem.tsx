@@ -199,8 +199,8 @@ export function SwatchCardItem({
               <>
                 <h3 className="text-lg font-bold mb-2">Includes Tests</h3>
                 <ul className="">
-                  {swatchCardTypesOnSwatchCard.map((item, index) => (
-                    <li className="mb-1" key={index}>
+                  {swatchCardTypesOnSwatchCard.map((item) => (
+                    <li className="mb-1" key={item.swatchCardType.id}>
                       <span className="font-bold text-sm">
                         {item.swatchCardType.label}
                       </span>

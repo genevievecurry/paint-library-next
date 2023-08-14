@@ -6,6 +6,7 @@ import Link from "next/link";
 import { SwatchIcon } from "@heroicons/react/24/outline";
 import { ExternalLink } from "./_components/client";
 import { SearchBar } from "./_components/SearchBar/SearchBar";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: {
@@ -23,11 +24,6 @@ export default function RootLayout({
   const creativeCommonsNamespaces = {
     "xmlns:cc": "http://creativecommons.org/ns#",
     "xmlns:dct": "http://purl.org/dc/terms/",
-  };
-
-  const SVGNamespaces = {
-    // "xmlns:xlink": "http://www.w3.org/1999/xlink",
-    // "xml:space": "preserve",
   };
 
   return (
@@ -54,7 +50,9 @@ export default function RootLayout({
                     </div>
                   </div>
                   <div className="hidden flex-1 md:flex md:items-center md:space-x-6 px-6">
-                    <SearchBar />
+                    <Suspense>
+                      <SearchBar />
+                    </Suspense>
                   </div>
                   {/* <div className="md:flex md:items-center md:space-x-6 px-3 text-sm">
                     <Link href="/palettes" className="decorate-link">
@@ -93,7 +91,6 @@ export default function RootLayout({
                         className="h-6 w-6 ml-2"
                         viewBox="5.5 -3.5 64 64"
                         enableBackground="new 5.5 -3.5 64 64"
-                        {...SVGNamespaces}
                       >
                         <g>
                           <circle
@@ -115,7 +112,6 @@ export default function RootLayout({
                         className="h-6 w-6 ml-2"
                         viewBox="5.5 -3.5 64 64"
                         enableBackground="new 5.5 -3.5 64 64"
-                        {...SVGNamespaces}
                       >
                         <g>
                           <circle
@@ -139,7 +135,6 @@ export default function RootLayout({
                         className="h-6 w-6 ml-2"
                         viewBox="5.5 -3.5 64 64"
                         enableBackground="new 5.5 -3.5 64 64"
-                        {...SVGNamespaces}
                       >
                         <g>
                           <circle
