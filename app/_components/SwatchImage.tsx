@@ -14,11 +14,13 @@ export function SwatchImage({
   backgroundColor?: string | null | undefined;
 }) {
   let filePath = "",
-    src = "";
+    src = "",
+    blurDataURL = "";
 
   if (swatchCard.length > 0) {
     filePath = swatchCard[0].imageKitUpload.filePath;
     src = `https://ik.imagekit.io/paintlibrary/tr:w-${width},h-${height}${filePath}`;
+    blurDataURL = `https://ik.imagekit.io/paintlibrary/tr:w-10,h-10${filePath}`;
   }
 
   return (
@@ -33,6 +35,8 @@ export function SwatchImage({
           height={height}
           alt={name}
           loading="lazy"
+          placeholder="blur"
+          blurDataURL={blurDataURL}
           className="w-full h-full object-center object-cover lg:w-full lg:h-full transition-all"
         />
       )}

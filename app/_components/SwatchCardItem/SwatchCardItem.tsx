@@ -146,6 +146,9 @@ export function SwatchCardItem({
               title="{paintName} Swatch"
               width={imageKitUpload.width || 200}
               height={imageKitUpload.height || 200}
+              loading="lazy"
+              placeholder="blur"
+              blurDataURL={`https://ik.imagekit.io/paintlibrary/tr:w-10,h-10${imageKitUpload.filePath}`}
             />
             {imageIsScaledDown && (
               <p className="text-xs my-2">

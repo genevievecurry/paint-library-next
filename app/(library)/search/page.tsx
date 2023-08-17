@@ -11,7 +11,7 @@ import type {
 } from "@/components/client";
 import { pluralizeWord } from "@/lib/utilities";
 import { useSearchParams } from "next/navigation";
-import { Fragment, Suspense, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
 import { Badge } from "@/components/Badge";
 
@@ -72,7 +72,7 @@ export default function Page() {
   }
 
   return (
-    <Suspense>
+    <>
       <PageHeader title={pageTitle} subtitle={setSubtitle()} />
 
       {searchQuery && (paintResultsCount > 0 || pigmentResultsCount > 0) && (
@@ -166,6 +166,6 @@ export default function Page() {
           </p>
         </div>
       )}
-    </Suspense>
+    </>
   );
 }

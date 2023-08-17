@@ -60,6 +60,7 @@ export function PaintCardItem({ paint }: { paint: PaintCardItemProps }) {
     if (swatchCard.length > 0) {
       const filePath = swatchCard[0].imageKitUpload.filePath;
       const src = `https://ik.imagekit.io/paintlibrary/tr:w-${swatchWidth},h-${swatchHeight}${filePath}`;
+      const blurDataURL = `https://ik.imagekit.io/paintlibrary/tr:w-10,h-10${filePath}`;
       return (
         <Image
           src={src}
@@ -67,6 +68,8 @@ export function PaintCardItem({ paint }: { paint: PaintCardItemProps }) {
           height={swatchHeight}
           alt={name}
           loading="lazy"
+          placeholder="blur"
+          blurDataURL={blurDataURL}
           className="w-full h-full object-center object-cover lg:w-full lg:h-full transition-all"
         />
       );
