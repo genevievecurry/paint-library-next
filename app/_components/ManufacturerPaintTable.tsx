@@ -1,10 +1,9 @@
 "use client";
 
-import type { Pigment, Color } from "@prisma/client";
+import type { Pigment, Color, Manufacturer, Paint, Line } from "@prisma/client";
 import { SwatchImage } from "@/components/client";
 
 import { pigmentCode } from "@/lib/utilities";
-import { ManufacturerProps } from "(library)/manufacturers/[slug]/page";
 import Link from "next/link";
 
 type pigmentLinkProps = Pigment & {
@@ -22,6 +21,33 @@ const pigmentLinkLabel = (pigment: pigmentLinkProps) => {
     pigment.number,
     pigment.slug
   );
+};
+
+type PigmentProps = Pigment & {
+  color: Color;
+};
+
+type PaintProps = Paint & {
+  swatchCard: any;
+  lightfastRating: Rating;
+  transparencyRating: Rating;
+  stainingRating: Rating;
+  granulationRating: Rating;
+  line: Line;
+  _count: {
+    pigmentsOnPaints: number;
+  };
+  pigmentsOnPaints: {
+    pigment: PigmentProps;
+  }[];
+};
+
+export type ManufacturerProps = Manufacturer & {
+  paints: PaintProps[];
+  _count: {
+    lines: number;
+    paints: number;
+  };
 };
 
 export type ManufacturerPaintTable = {

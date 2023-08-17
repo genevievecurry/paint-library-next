@@ -48,6 +48,7 @@ async function getManufacturer<T extends { [key: string]: Promise<any> }>({
       paints: {
         select: {
           uuid: true,
+          slug: true,
           name: true,
           lightfastRating: true,
           transparencyRating: true,

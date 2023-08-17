@@ -20,14 +20,12 @@
 *.pem
 .env
 .env.local
+.env*.local
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# local env files
-.env*.local
 
 # vercel
 .vercel
@@ -35,3 +33,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local db dumps
+*.dump
