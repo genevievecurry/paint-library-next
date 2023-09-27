@@ -1,5 +1,5 @@
 import { PaintCardCollection } from "@/components/PaintCardCollection";
-import { SearchBar } from "./_components/SearchBar/SearchBar";
+import { SearchBar } from "../_components/SearchBar/SearchBar";
 import { Suspense } from "react";
 
 export default function Page() {
