@@ -117,19 +117,30 @@ export function SwatchCardItem({
       (alignment === "vertical" && imageKitUpload.width > 250));
 
   return (
-    <>
+    <div key={swatchCard.id}>
       <div
         className={`cursor-pointer border-2 border-black p-1 relative ${swatchCardClasses}`}
         onClick={() => setIsOpen(true)}
       >
         <div className={aspectRatioClasses}>
           <div
-            className="h-full w-full bg-cover bg-center"
+            className="h-full w-full overflow-hidden"
             style={{
-              backgroundImage: `url(${swatchCard.imageKitUpload.url})`,
               backgroundColor: swatchCard.paint.hex || "#ffffff",
             }}
-          />
+          >
+            <Image
+              className="max-w-full"
+              src={`https://ik.imagekit.io/paintlibrary${imageKitUpload.filePath}${modalSwatchScaledQuery}`}
+              alt={`${swatchCard.paint.name} Swatch`}
+              title={`${swatchCard.paint.name} Swatch`}
+              width={imageKitUpload.width || 200}
+              height={imageKitUpload.height || 200}
+              loading="lazy"
+              placeholder="blur"
+              blurDataURL={`https://ik.imagekit.io/paintlibrary/tr:w-10,h-10${imageKitUpload.filePath}`}
+            />
+          </div>
         </div>
       </div>
       <Modal
@@ -237,6 +248,6 @@ export function SwatchCardItem({
           </div>
         </div>
       </Modal>
-    </>
+    </div>
   );
 }
